@@ -1,0 +1,265 @@
+{% extends 'erp/base_teacher.html' %}
+
+{% block content %}
+<div class="container" style="max-width: 100%; width: 100%; padding: 0;">
+    <header class="dashboard-header theme-teacher-hero d-flex justify-between align-center" style="padding: 24px;">
+        <div>
+            <h1 style="font-size: 1.5rem; font-weight: 700; margin: 0;">Instructor Faculty Workspace Core Terminal</h1>
+            <small style="font-size: 0.85rem; opacity: 0.85;">Active Account Instructor: <strong>{{ teacher.teacher_name }}</strong> | Target Discipline Area Mapping Segment: <strong>{{ teacher.branch }} Branch Core</strong></small>
+        </div>
+        <a href="{% url 'logout' %}" class="btn btn-dark btn-outline" style="color: #ffffff; border-color: #ffffff; padding: 6px 16px; border-radius: 20px; font-size: 0.85rem;">Sign Out Node</a>
+    </header>
+
+    <div class="teacher-workspace-grid">
+        
+        <div>
+            <div class="card" id="student-creation-section" style="margin-bottom: 20px;">
+                <h5 class="text-teal-accent" style="font-size: 1.05rem; font-weight: 700; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px; margin-bottom: 15px;">Provision & Create Student Account Node</h5>
+                <form method="post" autocomplete="off">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="create_student">
+                    <div style="display: grid; grid-template-columns: 1fr; gap: 10px;">
+                        {% include 'erp/form_snippet.html' with form=student_form %}
+                    </div>
+                    <button type="submit" class="btn btn-success" style="width: 100%; margin-top: 15px; font-weight: 700; background-color: #059669;">Commit Data Entry Map Flow Pipeline</button>
+                </form>
+            </div>
+            
+            <div class="card">
+                <h5 style="font-size: 1rem; font-weight: 600; color: #475569;">Learner Performance Array Density</h5>
+                <div class="chart-box-container">
+                    <canvas id="chartCgpaDensity"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <div class="card">
+                <div class="d-flex justify-between align-center" style="border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 15px;">
+                    <h5 style="font-size: 1.05rem; font-weight: 700; margin: 0;" class="text-sky-accent">Class Performance Ledger Grid System & Actions Vector Array</h5>
+                    <form method="get" class="filter-row-form">
+                        <input type="text" name="semester" class="form-group" style="margin: 0; width: 110px;" placeholder="Semester Ref">
+                        <input type="text" name="search" class="form-group" style="margin: 0;" placeholder="Search Registration ID/Name">
+                        <button type="submit" class="btn btn-dark" style="padding: 6px 16px; font-size: 0.85rem;">Filter</button>
+                    </form>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="modern-table" style="font-size: 0.78rem; text-align: center;">
+                        <thead>
+                            <tr>
+                                <th>Student Name</th>
+                                <th>Registration Number</th>
+                                <th>Branch</th>
+                                <th>Sec</th>
+                                <th>Sem</th>
+                                <th>Attendance</th>
+                                <th>Mid-1 Marks</th>
+                                <th>Mid-2 Marks</th>
+                                <th style="color: #059669; font-weight: 700; background-color: #f0fdf4;">Internal Marks (Max: 30)</th>
+                                <th>External Exam (Max: 70)</th>
+                                <th>CGPA Metric</th>
+                                <th>Operations Grid Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for s in students_page %}
+                            <tr>
+                                <td class="table-text-left"><strong>{{ s.name_of_student }}</strong></td>
+                                <td><code>{{ s.registration_number }}</code></td>
+                                <td>{{ s.branch }}</td>
+                                <td><strong>Section {{ s.section }}</strong></td>
+                                <td>{{ s.semester }}</td>
+                                <td style="color:#4f46e5; font-weight:700;">{{ s.attendance }}%</td>
+                                <td>{{ s.mid1_marks }}</td>
+                                <td>{{ s.mid2_marks }}</td>
+                                <td style="color: #059669; font-weight: 700; background-color: #f0fdf4;"><strong>{{ s.internal_marks }}/30</strong></td>
+                                <td style="font-weight: 600;">{{ s.external_marks }}/70</td>
+                                <td><span class="badge-secondary-pill">{{ s.cgpa }}</span></td>
+                                <td>
+                                    <a href="#gradeUpdateModal{{ s.pk }}" class="btn" style="padding: 4px 10px; font-size: 0.72rem; background-color: #4f46e5; color: #ffffff; border-radius: 4px;">Enter Scores</a>
+                                </td>
+                            </tr>
+
+                            <div class="modal-mask" id="gradeUpdateModal{{ s.pk }}">
+                                <div class="modal-window">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #cbd5e1; padding-bottom: 10px; margin-bottom: 15px;">
+                                        <h4 style="font-size: 1.05rem; font-weight: bold; color: #1e293b;">Update Academic Records: {{ s.name_of_student }}</h4>
+                                        <a href="#" style="text-decoration: none; font-size: 1.5rem; color: #64748b;">&times;</a>
+                                    </div>
+                                    <form method="post" autocomplete="off" class="grading-form-context" data-student-id="{{ s.pk }}">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="action" value="update_grading">
+                                        <input type="hidden" name="pk" value="{{ s.pk }}">
+                                        
+                                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; text-align: left;">
+                                            <div>
+                                                <label style="font-size:0.8rem; font-weight:700; color:#475569;">Mid-1 Marks (Out of 30)</label>
+                                                <input type="number" step="0.01" max="30" name="mid1_marks" value="{{ s.mid1_marks }}" class="form-group js-mid1-input" style="width:100%; padding:8px; margin-top:4px;" oninput="calculateLiveInternals('{{ s.pk }}')">
+                                            </div>
+                                            <div>
+                                                <label style="font-size:0.8rem; font-weight:700; color:#475569;">Mid-2 Marks (Out of 30)</label>
+                                                <input type="number" step="0.01" max="30" name="mid2_marks" value="{{ s.mid2_marks }}" class="form-group js-mid2-input" style="width:100%; padding:8px; margin-top:4px;" oninput="calculateLiveInternals('{{ s.pk }}')">
+                                            </div>
+                                            <div style="grid-column: span 2; background-color: #f8fafc; padding: 12px; border-radius: 6px; border: 1px dashed #cbd5e1;">
+                                                <label style="font-size:0.8rem; font-weight:700; color:#059669;">Total Calculated Internal Marks (Auto-filled)</label>
+                                                <input type="text" id="liveInternalOutput{{ s.pk }}" value="{{ s.internal_marks }}" class="form-group" style="width:100%; padding:8px; margin-top:4px; background-color:#e2e8f0; font-weight:700; color:#0f172a; border-color:#cbd5e1;" readonly>
+                                                <small style="color:#64748b; font-size:0.72rem; display:block; margin-top:2px;">Formula Applied: (Best Mid * 0.8) + (Worst Mid * 0.2)</small>
+                                            </div>
+                                            <div>
+                                                <label style="font-size:0.8rem; font-weight:700; color:#475569;">External Exam Marks (Out of 70)</label>
+                                                <input type="number" step="0.01" max="70" name="external_marks" value="{{ s.external_marks }}" class="form-group" style="width:100%; padding:8px; margin-top:4px;">
+                                            </div>
+                                            <div>
+                                                <label style="font-size:0.8rem; font-weight:700; color:#475569;">Current CGPA Score</label>
+                                                <input type="number" step="0.01" max="10" name="cgpa" value="{{ s.cgpa }}" class="form-group" style="width:100%; padding:8px; margin-top:4px;">
+                                            </div>
+                                            <div style="grid-column: span 2;">
+                                                <label style="font-size:0.8rem; font-weight:700; color:#475569;">Semester Identifier Reference</label>
+                                                <input type="text" name="semester" value="{{ s.semester }}" class="form-group" style="width:100%; padding:8px; margin-top:4px;">
+                                            </div>
+                                        </div>
+                                        
+                                        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+                                            <a href="#" class="btn" style="background-color: #cbd5e1; color: #334155;">Abort modification</a>
+                                            <button type="submit" class="btn btn-primary">Commit Dynamic DB Transaction Write</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            {% empty %}
+                            <tr>
+                                <td colspan="12" style="color: #64748b; padding: 24px 0;">No matching targeted records discoverable in the active partition space loops.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% include 'erp/pagination_snippet.html' with page_obj=students_page %}
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="modal-mask" id="dailyAttendanceDashboard">
+    <div class="modal-window" style="max-width: 900px; width: 95%; max-height: 85vh; overflow-y: auto;">
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e2e8f0; padding-bottom: 12px; margin-bottom: 20px;">
+            <div>
+                <h3 style="font-size: 1.2rem; font-weight: 700; color: #0f172a; margin: 0; font-family: monospace;">
+                    Daily Session Attendance Control Board
+                </h3>
+                <small style="color: #64748b;">Current Active Track Date: <strong>{% now "Y-m-d" %}</strong></small>
+            </div>
+            <a href="#" style="text-decoration: none; font-size: 1.8rem; color: #64748b; font-weight: bold;">&times;</a>
+        </div>
+
+        <form method="post" autocomplete="off">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="bulk_submit_attendance">
+
+            <div class="table-responsive" style="margin-bottom: 20px;">
+                <table class="modern-table" style="font-size: 0.85rem; font-family: monospace;">
+                    <thead style="background-color: #f0fdf4; color: #15803d;">
+                        <tr>
+                            <th style="padding-left: 16px;">Student Name</th>
+                            <th>Registration ID</th>
+                            <th>Section</th>
+                            <th style="text-align: center; width: 320px;">Elected Daily Session Status Parameter</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for s in students_page %}
+                        <tr>
+                            <td style="padding-left: 16px;"><strong>{{ s.name_of_student }}</strong></td>
+                            <td><code>{{ s.registration_number }}</code></td>
+                            <td><strong>Sec {{ s.section }}</strong></td>
+                            <td>
+                                <div style="display: flex; gap: 10px; justify-content: space-between; padding: 4px 0;">
+                                    <label style="font-size: 0.78rem; font-weight:600; color: #15803d; cursor:pointer;">
+                                        <input type="radio" name="student_status_{{ s.pk }}" value="FULL" checked style="width:auto; display:inline-block; margin-right:4px;"> Full Day
+                                    </label>
+                                    <label style="font-size: 0.78rem; font-weight:600; color: #b45309; cursor:pointer;">
+                                        <input type="radio" name="student_status_{{ s.pk }}" value="HALF" style="width:auto; display:inline-block; margin-right:4px;"> Half Day
+                                    </label>
+                                    <label style="font-size: 0.78rem; font-weight:600; color: #b91c1c; cursor:pointer;">
+                                        <input type="radio" name="student_status_{{ s.pk }}" value="ABSENT" style="width:auto; display:inline-block; margin-right:4px;"> Absent
+                                    </label>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" style="color: #64748b; padding: 20px 0; text-align: center;">No active students assigned to your domain sector.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div style="display: flex; justify-content: flex-end; gap: 12px; border-top: 1px solid #e2e8f0; padding-top: 15px;">
+                <a href="#" class="btn" style="background-color: #cbd5e1; color: #334155;">Close Sheet</a>
+                <button type="submit" class="btn btn-success" style="background-color: #059669; padding: 10px 30px;">
+                    Commit All Session Status Records
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // 1. Render class CGPA tracking distribution chart
+    new Chart(document.getElementById('chartCgpaDensity'), {
+        type: 'bar',
+        data: { 
+            labels: {{ grade_labels|safe }}, 
+            datasets: [{ 
+                label: 'Density Metrics Stack Count', 
+                data: {{ grade_data|safe }}, 
+                backgroundColor: 'rgba(2, 132, 199, 0.8)', 
+                borderRadius: 4 
+            }] 
+        },
+        options: { 
+            responsive: true, 
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } }
+        }
+    });
+
+    // 2. REAL-TIME AUTOMATION MATHEMATICAL SCRIPT ENGINE
+    function calculateLiveInternals(studentId) {
+        const form = document.querySelector(`form[data-student-id="${studentId}"]`);
+        if (!form) return;
+
+        const m1Input = form.querySelector('.js-mid1-input');
+        const m2Input = form.querySelector('.js-mid2-input');
+        const outputBox = document.getElementById(`liveInternalOutput${studentId}`);
+
+        let mid1 = parseFloat(m1Input.value) || 0;
+        let mid2 = parseFloat(m2Input.value) || 0;
+
+        if (mid1 > 30) { mid1 = 30; m1Input.value = 30; }
+        if (mid2 > 30) { mid2 = 30; m2Input.value = 30; }
+
+        const bestMid = Math.max(mid1, mid2);
+        const worstMid = Math.min(mid1, mid2);
+        const result = (bestMid * 0.8) + (worstMid * 0.2);
+
+        outputBox.value = result.toFixed(2);
+    }
+
+    // 3. NEW DYNAMIC INTERACTIVE ADMISSION CONTROLLER SCRIPT FOR LATERAL ENTRIES
+    function toggleFormSemesterFallback() {
+        const selector = document.getElementById('js-admission-selector');
+        const semInput = document.getElementById('js-semester-input');
+        
+        if (selector && selector.value === 'LATERAL') {
+            // Force dynamic baseline entry values to default to 2-1 for lateral diploma paths
+            if (semInput.value === '1-1' || semInput.value === '1-2' || semInput.value === '') {
+                semInput.value = '2-1';
+            }
+        }
+    }
+</script>
+{% endblock %}

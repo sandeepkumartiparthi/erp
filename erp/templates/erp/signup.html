@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ERP Self-Registration Hub</title>
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --glass: rgba(255, 255, 255, 0.05);
+            --border: rgba(255, 255, 255, 0.1);
+            --text: #ffffff;
+        }
+
+        body { 
+            background: radial-gradient(circle at top right, #1e293b, #0f172a) !important;
+            color: var(--text) !important; 
+            font-family: 'Inter', sans-serif; 
+            padding: 40px 20px; 
+            margin: 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container { max-width: 760px; width: 100%; }
+
+        .card { 
+            background: var(--glass) !important; 
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--border) !important;
+            border-radius: 24px !important;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3) !important;
+        }
+
+        .theme-admin-hero { 
+            background: rgba(0,0,0,0.2); 
+            padding: 30px; 
+            text-align: center; 
+        }
+
+        .tier-selector-row { display: flex; gap: 10px; justify-content: center; margin-bottom: 25px; }
+        
+        /* Buttons - Locked Hover Styles */
+        .btn { 
+            padding: 10px 20px; border-radius: 50px; font-family: monospace; 
+            text-decoration: none; border: 1px solid var(--border); color: #fff;
+            transition: all 0.3s;
+        }
+        .btn:hover { transform: translateY(-2px); opacity: 0.9; }
+
+        /* Form Styling */
+        .form-group { margin-bottom: 15px; }
+        label { font-weight: 600; margin-bottom: 5px; display: block; color: #94a3b8; }
+        
+        .form-control, .form-select {
+            background: rgba(0,0,0,0.2) !important;
+            border: 1px solid var(--border) !important;
+            color: #ffffff !important;
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            box-sizing: border-box;
+        }
+
+        .alert { padding: 15px; border-radius: 12px; margin-bottom: 20px; }
+        .alert-danger { background: rgba(220, 38, 38, 0.2); border: 1px solid #dc2626; color: #f87171; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="card">
+            
+            <div class="theme-admin-hero">
+                <h2 style="font-size: 1.5rem; font-weight: 800; margin: 0; letter-spacing: -0.5px;">Dynamic Self-Registration Portal</h2>
+                <p style="font-size: 0.9rem; color: #94a3b8; margin: 8px 0 0 0;">Select your access profile tier to complete system entry</p>
+            </div>
+            
+            <div style="padding: 30px;">
+                {% if error_msg %}<div class="alert alert-danger">{{ error_msg }}</div>{% endif %}
+
+                <div class="tier-selector-row">
+                    <a href="?role=student" class="btn" style="background: {% if role_type == 'student' %}#059669{% else %}transparent{% endif %};">Student</a>
+                    <a href="?role=teacher" class="btn" style="background: {% if role_type == 'teacher' %}#0284c7{% else %}transparent{% endif %};">Teacher</a>
+                    <a href="?role=hod" class="btn" style="background: {% if role_type == 'hod' %}#4b5563{% else %}transparent{% endif %};">HOD Admin</a>
+                </div>
+
+                <form method="post" autocomplete="off">
+                    {% csrf_token %}
+                    <input type="hidden" name="role_type" value="{{ role_type }}">
+
+                    <div class="form-group">
+                        <label>System Username Identifier</label>
+                        {% if role_type == 'student' %}{{ student_form.username }}{% elif role_type == 'teacher' %}{{ teacher_form.username }}{% else %}{{ hod_form.username }}{% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label>Password Phrase Code</label>
+                        {% if role_type == 'student' %}{{ student_form.password }}{% elif role_type == 'teacher' %}{{ teacher_form.password }}{% else %}{{ hod_form.password }}{% endif %}
+                    </div>
+
+                    <div style="margin-top: 20px; display: grid; gap: 15px;">
+                        {% if role_type == 'hod' %}
+                            {% include 'erp/form_snippet.html' with form=hod_form %}
+                        {% elif role_type == 'teacher' %}
+                            {% include 'erp/form_snippet.html' with form=teacher_form %}
+                        {% else %}
+                            {% include 'erp/form_snippet.html' with form=student_form %}
+                        {% endif %}
+                    </div>
+
+                    <button type="submit" class="btn" style="width: 100%; margin-top: 25px; background: #6366f1; border: none; font-size: 1rem;">
+                        Commit Dynamic DB Register Sequence
+                    </button>
+                </form>
+
+                <div style="text-align: center; margin-top: 25px;">
+                    <a href="{% url 'index' %}" style="color: #64748b; font-size: 0.85rem; text-decoration: none;">← Return to Gateway Terminal</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

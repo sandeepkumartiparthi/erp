@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}HOD Operations Admin Suite{% endblock %}</title>
+    <link rel="stylesheet" href="/static/css/erp_styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <div class="app-layout-wrapper">
+        <!-- Pure CSS Left Structural Side Navigation Panel Container -->
+        <aside class="sidebar">
+            <h3 class="sidebar-title">ERP Enterprise HOD</h3>
+            <ul class="sidebar-menu">
+                <li>
+                    <a href="#dashboard-analytics" class="sidebar-link">
+                        <span>Dashboard Analytics</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#faculty-board" class="sidebar-link">
+                        <span>Faculty Board</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#student-board" class="sidebar-link">
+                        <span>Student Board</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#subjects-array" class="sidebar-link">
+                        <span>Subjects Array</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#audit-ledger" class="sidebar-link">
+                        <span>Audit Ledger</span>
+                    </a>
+                </li>
+            </ul>
+            <hr class="sidebar-divider">
+            <a href="{% url 'logout' %}" class="btn btn-danger" style="width: 100%;">Exit Console Node</a>
+        </aside>
+
+        <!-- Main Variable Content Frame Injection Framework Area Workspace -->
+        <main class="main-workspace-offset">
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Faculty Management Portal{% endblock %}</title>
+    <link rel="stylesheet" href="/static/css/erp_styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <div class="app-layout-wrapper">
+        <aside class="sidebar sidebar-teacher">
+            <h3 class="sidebar-title sidebar-title-teacher">Faculty Portal</h3>
+            <ul class="sidebar-menu">
+                <li>
+                    <a href="{% url 'teacher_dashboard' %}" class="sidebar-link sidebar-link-teacher">
+                        <span>Metrics Overview</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'teacher_students' %}" class="sidebar-link sidebar-link-teacher">
+                        <span>My Students Group</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#dailyAttendanceDashboard" class="sidebar-link sidebar-link-teacher">
+                        <span>Daily Attendance Sheet</span>
+                    </a>
+                </li>
+            </ul>
+            <hr class="sidebar-divider sidebar-divider-teacher">
+            <a href="{% url 'logout' %}" class="btn btn-danger" style="width: 100%;">Exit Account</a>
+        </aside>
+
+        <main class="main-workspace-offset bg-teacher-workspace">
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+
+</body>
+</html>

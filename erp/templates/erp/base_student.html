@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}My Academic Dashboard{% endblock %}</title>
+    <link rel="stylesheet" href="/static/css/erp_styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <div class="app-layout-wrapper">
+        <aside class="sidebar sidebar-student">
+            <h3 class="sidebar-title sidebar-title-student">Student Hub</h3>
+            <ul class="sidebar-menu">
+                <li>
+                    <a href="{% url 'student_dashboard' %}" class="sidebar-link sidebar-link-student active">
+                        <span>Performance Node</span>
+                    </a>
+                </li>
+            </ul>
+            <hr class="sidebar-divider sidebar-divider-student">
+            <a href="{% url 'logout' %}" class="btn btn-danger" style="width: 100%;">Sign Out</a>
+        </aside>
+
+        <main class="main-workspace-offset bg-student-workspace">
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+
+</body>
+</html>

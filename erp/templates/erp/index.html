@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>University ERP Grid Core | Secure Gateway</title>
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --glass: rgba(255, 255, 255, 0.05);
+            --border: rgba(255, 255, 255, 0.1);
+            --text: #ffffff;
+            --text-dim: #94a3b8;
+        }
+
+        body {
+            background: radial-gradient(circle at top right, #1e293b, #0f172a);
+            color: var(--text);
+            font-family: 'Inter', system-ui, sans-serif;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .gateway-container { max-width: 1200px; width: 90%; padding-top: 80px; text-align: center; }
+
+        .gateway-title { 
+            font-size: 3.5rem; 
+            font-weight: 900; 
+            letter-spacing: -2px; 
+            background: linear-gradient(to right, #fff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .portal-selection-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            margin-top: 60px;
+        }
+
+        .card {
+            background: var(--glass) !important;
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border) !important;
+            border-radius: 24px !important;
+            padding: 40px !important;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+            text-align: left;
+        }
+
+        .card:hover {
+            transform: translateY(-20px);
+            border-color: rgba(255,255,255,0.2) !important;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3) !important;
+        }
+
+        .portal-card-title { font-size: 1.5rem; margin-bottom: 15px; }
+        .portal-card-desc { color: var(--text-dim); line-height: 1.6; margin-bottom: 30px; }
+
+        .btn {
+            display: block;
+            padding: 14px;
+            border-radius: 50px !important;
+            text-decoration: none;
+            font-weight: 700;
+            text-align: center;
+            transition: transform 0.2s;
+        }
+        .btn:hover { transform: scale(1.02); }
+
+        .admin-pinned-corner { position: absolute; top: 30px; right: 30px; }
+    </style>
+</head>
+<body>
+
+    <div class="admin-pinned-corner">
+        <a href="{% url 'portal_login' 'admin' %}" class="btn" style="border: 1px solid var(--border); color: #fff;">
+            Admin Secure Node Login
+        </a>
+    </div>
+
+    <div class="gateway-container">
+        <header style="margin-bottom: 60px;">
+            <div class="gateway-title">UNIVERSITY ERP GRID CORE</div>
+            <p style="color: var(--text-dim); font-size: 1.1rem;">Select your authorized domain portal channel</p>
+        </header>
+
+        <div class="portal-selection-grid">
+            <div class="card border-primary-top">
+                <h3 class="portal-card-title">HOD Workspace</h3>
+                <p class="portal-card-desc">Complete branch analytics control module system monitoring dashboard access.</p>
+                <a href="{% url 'portal_login' 'hod' %}" class="btn" style="background: #6366f1; color: white;">Enter HOD Portal</a>
+            </div>
+
+            <div class="card border-info-top">
+                <h3 class="portal-card-title">Teacher Panel</h3>
+                <p class="portal-card-desc">Provision student profiles registry matrices and evaluate internal grading fields.</p>
+                <a href="{% url 'portal_login' 'teacher' %}" class="btn" style="background: #0284c7; color: white;">Enter Teacher Portal</a>
+            </div>
+
+            <div class="card border-success-top">
+                <h3 class="portal-card-title">Student Hub</h3>
+                <p class="portal-card-desc">Monitor personal daily live attendance ledger records logs and score matrices sheets.</p>
+                <a href="{% url 'portal_login' 'student' %}" class="btn" style="background: #059669; color: white;">Enter Student Portal</a>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

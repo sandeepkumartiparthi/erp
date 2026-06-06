@@ -1,0 +1,120 @@
+{% extends 'erp/base_hod.html' %}
+
+{% block content %}
+<div class="container" style="max-width: 100%; width: 100%; padding: 0;">
+    <div class="card">
+        <div class="d-flex justify-between align-center" style="border-bottom: 1px solid #e2e8f0; padding-bottom: 14px; margin-bottom: 20px;">
+            <h2 style="font-size: 1.25rem; font-weight: 700; margin: 0;">Faculty Inventory Control Node Registry</h2>
+            <a href="#createTeacherModal" class="btn btn-dark">Register New Faculty Profile Node</a>
+        </div>
+
+        <form class="inline-filter-form" method="get">
+            <input type="text" name="search" placeholder="Search parameters index..." value="{{ search_val }}">
+            
+            <select name="department">
+                <option value="">Filter via Department Context Block</option>
+                {% for code, label in departments %}
+                    <option value="{{ code }}" {% if selected_dept == code %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+
+            <button type="submit" class="btn btn-dark btn-outline btn-submit-filter">Process Filter Query</button>
+        </form>
+
+        <div class="table-responsive">
+            <table class="modern-table" style="font-size: 0.85rem; text-align: center;">
+                <thead>
+                    <tr>
+                        <th>Identity Token Name</th>
+                        <th>Emp ID Code</th>
+                        <th>Dept Domain</th>
+                        <th>Designation Label</th>
+                        <th>Expertise Context Array</th>
+                        <th>Execution Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for t in page_obj %}
+                    <tr>
+                        <td style="text-align: left;"><strong>{{ t.teacher_name }}</strong></td>
+                        <td><code>{{ t.employee_id }}</code></td>
+                        <td><span class="badge-indigo" style="background-color: #e0f2fe; color: #0369a1;">{{ t.department }}</span></td>
+                        <td>{{ t.designation }}</td>
+                        <td><small style="color: #64748b;">{{ t.subject_expertise }}</small></td>
+                        <td>
+                            <a href="#updateModal{{ t.pk }}" class="btn" style="padding: 4px 12px; font-size: 0.8rem; background-color: #0284c7; color: #ffffff;">Mod</a>
+                            
+                            <form method="post" class="d-inline" onsubmit="return confirm('Execute safe transaction permanent wipeout data structure vector baseline?');">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="delete">
+                                <input type="hidden" name="pk" value="{{ t.pk }}">
+                                <button type="submit" class="btn" style="padding: 4px 12px; font-size: 0.8rem; background-color: transparent; border: 1px solid #cbd5e1; color: #64748b;">Purge</button>
+                            </form>
+                        </td>
+                    </tr>
+
+                    <div class="modal-mask" id="updateModal{{ t.pk }}">
+                        <div class="modal-window" style="max-width: 650px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 20px;">
+                                <h4 style="font-size: 1.05rem; font-weight: bold; color: #1e293b;">Modify Target Faculty Settings Node Block: {{ t.employee_id }}</h4>
+                                <a href="#" style="text-decoration: none; font-size: 1.5rem; color: #64748b;">&times;</a>
+                            </div>
+                            <form method="post" autocomplete="off">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="update">
+                                <input type="hidden" name="pk" value="{{ t.pk }}">
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                                    {% include 'erp/form_snippet.html' with form=teacher_form %}
+                                </div>
+                                <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 25px;">
+                                    <a href="#" class="btn" style="background-color: #e2e8f0; color: #334155;">Abort Data Modify</a>
+                                    <button type="submit" class="btn btn-primary" style="background-color: #0284c7;">Commit Dynamic DB Write Matrix</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" style="color: #64748b; padding: 24px 0;">No active operational elements profile nodes identified matching query context block parameters arrays.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% include 'erp/pagination_snippet.html' with page_obj=page_obj %}
+    </div>
+</div>
+
+<div class="modal-mask" id="createTeacherModal">
+    <div class="modal-window" style="max-width: 750px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 20px;">
+            <h4 style="font-size: 1.05rem; font-weight: bold; color: #1e293b;">Register Faculty Authentication Framework Node Profiles Matrix</h4>
+            <a href="#" style="text-decoration: none; font-size: 1.5rem; color: #64748b;">&times;</a>
+        </div>
+        <form method="post" autocomplete="off">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="create">
+            
+            <h5 class="text-primary" style="font-size: 0.9rem; font-weight: 700; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px; margin-bottom: 14px;">
+                System Framework Core User Identity Authorization Credentials Block Setup
+            </h5>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px;">
+                <div class="form-group"><label>Authentication Username String</label><input type="text" name="username" placeholder="Create login username" required></div>
+                <div class="form-group"><label>Authentication Password Code</label><input type="password" name="password" placeholder="Create secure access password" required></div>
+            </div>
+
+            <h5 class="text-primary" style="font-size: 0.9rem; font-weight: 700; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px; margin-bottom: 14px;">
+                Dynamic Profile Metadata Allocation Parameters Records Fieldsets
+            </h5>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                {% include 'erp/form_snippet.html' with form=teacher_form %}
+            </div>
+
+            <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 25px;">
+                <a href="#" class="btn" style="background-color: #e2e8f0; color: #334155;">Close</a>
+                <button type="submit" class="btn btn-dark">Instantiate Transaction Atomic Flow Pipeline</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

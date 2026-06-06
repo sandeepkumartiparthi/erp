@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Access Verification | {{ role_type|upper }}</title>
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --glass: rgba(255, 255, 255, 0.05);
+            --border: rgba(255, 255, 255, 0.1);
+            --text: #ffffff;
+        }
+
+        body { 
+            background: radial-gradient(circle at top right, #1e293b, #0f172a) !important;
+            color: var(--text) !important; 
+            font-family: 'Inter', sans-serif; 
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .auth-card { 
+            background: var(--glass) !important; 
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border) !important;
+            border-radius: 30px !important;
+            padding: 50px;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5) !important;
+        }
+
+        .node-tag {
+            background: #1e293b;
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: #38bdf8;
+            margin-bottom: 20px;
+            display: inline-block;
+            border: 1px solid #334155;
+        }
+
+        h2 { font-size: 1.8rem; font-weight: 800; margin-bottom: 30px; }
+
+        .form-group { text-align: left; margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; color: #94a3b8; font-size: 0.85rem; font-weight: 600; }
+        
+        input {
+            width: 100%;
+            padding: 14px;
+            background: rgba(0,0,0,0.3) !important;
+            border: 1px solid var(--border) !important;
+            border-radius: 14px !important;
+            color: white !important;
+            box-sizing: border-box;
+            font-size: 1rem;
+        }
+
+        .btn-validate {
+            width: 100%;
+            padding: 16px;
+            background: #6366f1;
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 20px;
+        }
+
+        .btn-validate:hover { background: #4f46e5; transform: translateY(-2px); }
+
+        .error-box { 
+            background: rgba(220, 38, 38, 0.1); 
+            color: #f87171; 
+            padding: 12px; 
+            border-radius: 12px; 
+            margin-bottom: 20px; 
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="auth-card">
+        <div class="node-tag">NODE PATH: {{ role_type|upper }} CHANNEL</div>
+        <h2>AUTHENTICATION</h2>
+        
+        {% if error_msg %}
+            <div class="error-box">{{ error_msg }}</div>
+        {% endif %}
+
+        <form method="post" autocomplete="off">
+            {% csrf_token %}
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" name="username" placeholder="Enter Credentials" required>
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" name="password" placeholder="••••••••" required>
+            </div>
+            
+            <button type="submit" class="btn-validate">VALIDATE CREDENTIALS TOKEN</button>
+        </form>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,133 @@
+{% extends 'erp/base_hod.html' %}
+
+{% block content %}
+<div class="container" style="max-width: 100%; width: 100%; padding: 0;">
+    <div class="card">
+        <div class="d-flex justify-between align-center" style="border-bottom: 1px solid #e2e8f0; padding-bottom: 14px; margin-bottom: 20px;">
+            <h2 style="font-size: 1.25rem; font-weight: 700; margin: 0;">Student Registry Node Control Framework Board Matrix</h2>
+            <a href="#createStudentModal" class="btn btn-dark"><i class="bi bi-person-plus-fill"></i> Provision Matriculation Student Node Entry</a>
+        </div>
+
+        <form class="inline-filter-form" method="get">
+            <input type="text" name="search" placeholder="Search target metrics identifier string..." value="{{ search_val }}">
+            
+            <select name="department">
+                <option value="">Filter Department Node Coordinates Zone</option>
+                {% for code, label in departments %}
+                    <option value="{{ code }}" {% if selected_dept == code %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+
+            <select name="section">
+                <option value="">Filter Section Track Path</option>
+                {% for code, label in sections %}
+                    <option value="{{ code }}" {% if selected_sec == code %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+
+            <button type="submit" class="btn btn-dark btn-outline btn-submit-filter">Filter Execution Array</button>
+        </form>
+
+        <div class="table-responsive">
+            <table class="modern-table" style="font-size: 0.85rem; text-align: center;">
+                <thead>
+                    <tr>
+                        <th>Student Entity Label</th>
+                        <th>Registration Index</th>
+                        <th>Department Zone</th>
+                        <th>Track Sec</th>
+                        <th>Attendance Core</th>
+                        <th>CGPA Rank</th>
+                        <th>Operations Actions Grid Vector Matrix</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for s in page_obj %}
+                    <tr>
+                        <td style="text-align: left;"><strong>{{ s.name_of_student }}</strong></td>
+                        <td><code>{{ s.registration_number }}</code></td>
+                        <td><span class="badge-success-glow">{{ s.branch }}</span></td>
+                        <td><strong>Section {{ s.section }}</strong></td>
+                        <td>
+                            <span class="{% if s.attendance < 75.0 %}text-danger-status{% else %}text-success-status{% endif %}">
+                                {{ s.attendance }}%
+                            </span>
+                        </td>
+                        <td><span class="badge-dark-pill">{{ s.cgpa }}</span></td>
+                        <td>
+                            <a href="#updateStudentModal{{ s.pk }}" class="btn" style="padding: 4px 12px; font-size: 0.8rem; background-color: #ef4444; color: #ffffff;">Modify</a>
+                            
+                            <form method="post" class="d-inline" onsubmit="return confirm('Purge current dynamic database tracking context object structural instance safely permanently inside SQLite blocks?');">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="delete">
+                                <input type="hidden" name="pk" value="{{ s.pk }}">
+                                <button type="submit" class="btn" style="padding: 4px 12px; font-size: 0.8rem; background-color: transparent; border: 1px solid #cbd5e1; color: #64748b;">Purge Matrix</button>
+                            </form>
+                        </td>
+                    </tr>
+
+                    <div class="modal-mask" id="updateStudentModal{{ s.pk }}">
+                        <div class="modal-window" style="max-width: 650px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 20px;">
+                                <h4 style="font-size: 1.05rem; font-weight: bold;">Alter Target Student Configuration Elements Fields Matrix Instance Index Node Block: {{ s.registration_number }}</h4>
+                                <a href="#" style="text-decoration: none; font-size: 1.5rem; color: #64748b;">&times;</a>
+                            </div>
+                            <form method="post" autocomplete="off">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="update">
+                                <input type="hidden" name="pk" value="{{ s.pk }}">
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                                    {% include 'erp/form_snippet.html' with form=student_form %}
+                                </div>
+                                <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 25px;">
+                                    <a href="#" class="btn" style="background-color: #e2e8f0; color: #334155;">Close</a>
+                                    <button type="submit" class="btn btn-primary">Save Structural Array Layout State</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" style="color: #64748b; padding: 24px 0;">No records matching processing targets block index tracking vectors definitions found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% include 'erp/pagination_snippet.html' with page_obj=page_obj %}
+    </div>
+</div>
+
+<div class="modal-mask" id="createStudentModal">
+    <div class="modal-window" style="max-width: 750px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 20px;">
+            <h4 style="font-size: 1.05rem; font-weight: bold;">Instantiate Student Profile Base Entry Pipeline Sequence Structural Matrix Context</h4>
+            <a href="#" style="text-decoration: none; font-size: 1.5rem; color: #64748b;">&times;</a>
+        </div>
+        <form method="post" autocomplete="off">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="create">
+            
+            <h5 class="text-success-accent" style="font-size: 0.9rem; font-weight: 700; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px; margin-bottom: 14px;">
+                System Base Security Profile Node Access Controls Matrix Configuration Target Fields Block
+            </h5>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px;">
+                <div class="form-group"><label>Authentication Username String</label><input type="text" name="username" placeholder="Create user access name token" required></div>
+                <div class="form-group"><label>Authentication Password Code</label><input type="password" name="password" placeholder="Create user secure pass code" required></div>
+            </div>
+
+            <h5 class="text-success-accent" style="font-size: 0.9rem; font-weight: 700; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px; margin-bottom: 14px;">
+                Academic Parameters, Relational Data Mapping Arrays Records Profile Allocation Fieldsets Matrices
+            </h5>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                {% include 'erp/form_snippet.html' with form=student_form %}
+            </div>
+
+            <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 25px;">
+                <a href="#" class="btn" style="background-color: #e2e8f0; color: #334155;">Close</a>
+                <button type="submit" class="btn btn-dark">Commit Structural Provision Sequence Pipeline Model</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

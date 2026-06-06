@@ -1,0 +1,72 @@
+{% extends 'erp/base_hod.html' %}
+
+{% block content %}
+<div class="container" style="max-width: 100%; width: 100%; padding: 0;">
+    <div class="card">
+        <h2 style="font-size: 1.25rem; font-weight: 700; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 20px;">
+            Transaction Audit Ledger & History Tracking Logs Subsystem
+        </h2>
+
+        <div class="table-responsive">
+            <table class="modern-table" style="font-size: 0.82rem; text-align: center; vertical-align: middle;">
+                <thead class="dark-table-head">
+                    <tr style="color: #ffffff;">
+                        <th>Timestamp Matrix Block Frame</th>
+                        <th>Operator User Signature Token</th>
+                        <th>RBAC Actor Context</th>
+                        <th>Target Record Entity Node</th>
+                        <th>Executed Pipeline Operation Action</th>
+                        <th>Pre-State Frame (JSON Log)</th>
+                        <th>Post-State Frame (JSON Log)</th>
+                        <th>System Generated Explanation Log Narrative</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for log in page_obj %}
+                    <tr>
+                        <td><span class="small-muted">{{ log.timestamp|date:"Y-m-d H:i:s" }}</span></td>
+                        <td><span class="badge-dark-pill" style="border-radius: 4px; padding: 4px 8px;">{{ log.modified_by }}</span></td>
+                        <td><span class="text-info" style="text-transform: uppercase; font-weight: 600;">{{ log.role }}</span></td>
+                        <td><code>{{ log.target_record }}</code></td>
+                        <td>
+                            <span class="badge" style="padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 0.75rem;
+                                {% if log.action == 'CREATE' %} background-color: #dcfce7; color: #15803d;
+                                {% elif log.action == 'UPDATE' or log.action == 'MUTATE_GRADES' %} background-color: #fef9c3; color: #a16207;
+                                {% elif log.action == 'DELETE' %} background-color: #fee2e2; color: #b91c1c;
+                                {% else %} background-color: #f1f5f9; color: #475569; {% endif %}">
+                                {{ log.action }}
+                            </span>
+                        </td>
+                        <td>
+                            {% if log.old_value %}
+                                <pre class="pre-state-box">{{ log.old_value }}</pre>
+                            {% else %}
+                                <span class="small-muted font-italic">NULL</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if log.new_value %}
+                                <pre class="pre-state-box">{{ log.new_value }}</pre>
+                            {% else %}
+                                <span class="small-muted font-italic">NULL</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <p class="text-wrap-break">{{ log.description }}</p>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="8" class="text-center" style="color: #64748b; padding: 24px 0; background-color: #f8fafc;">
+                            No structural mutation write records identified inside transaction log database tables sequences setup profiles.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% include 'erp/pagination_snippet.html' with page_obj=page_obj %}
+    </div>
+</div>
+{% endblock %}

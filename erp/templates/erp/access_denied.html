@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clearance Violation Error</title>
+    <link rel="stylesheet" href="/static/css/erp_styles.css">
+</head>
+<body style="background-color: #0f172a; color: #f8fafc;">
+
+    <div class="error-container">
+        <h1 class="error-code">403</h1>
+        <h3 class="error-heading" style="color: #f1f5f9;">RBAC Security Boundaries Vector Fault</h3>
+        <p class="error-message">Your login authorization token mapping configuration does not have execution access permissions for this data space block.</p>
+        <a href="{% url 'index' %}" class="btn btn-outline-danger">Retreat to Safe Terminal Base</a>
+    </div>
+
+</body>
+</html>

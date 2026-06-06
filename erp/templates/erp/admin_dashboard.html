@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Administrator Infrastructure Core Command Suite</title>
+    <link rel="stylesheet" href="/static/css/erp_styles.css">
+    <style>
+        /* BASE UI VISIBILITY ENGINE */
+        body { 
+            background-color: #0f172a !important; 
+            color: #ffffff !important; 
+            font-family: sans-serif; 
+            padding: 20px; 
+            margin: 0;
+        }
+        
+        /* CARD: Locked background, NO hover color changes */
+        .card { 
+            background-color: #1e293b !important; 
+            color: #ffffff !important; 
+            padding: 24px; 
+            border-radius: 8px; 
+            margin-bottom: 20px;
+            border: 1px solid #334155;
+            transition: none !important; 
+        }
+
+        /* FORCE HOVER TO BE IDENTICAL TO NORMAL STATE */
+        .card:hover, .card:active {
+            background-color: #1e293b !important; 
+            color: #ffffff !important;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        /* TABLE VISIBILITY & HOVER LOCK */
+        .modern-table { width: 100%; border-collapse: collapse; color: #ffffff !important; }
+        .modern-table th { background-color: #334155 !important; color: #ffffff !important; padding: 12px; text-align: left; }
+        .modern-table td { color: #e2e8f0 !important; padding: 12px; border-bottom: 1px solid #334155; }
+        
+        /* Force Table Rows to stay dark on hover */
+        .modern-table tr:hover { background-color: #1e293b !important; color: #ffffff !important; }
+
+        /* FORM FIELD VISIBILITY */
+        .form-control, .form-select {
+            background-color: #0f172a !important;
+            color: #ffffff !important;
+            border: 1px solid #475569 !important;
+        }
+        .form-control:hover, .form-control:focus, .form-select:hover {
+            background-color: #0f172a !important;
+            color: #ffffff !important;
+        }
+
+        /* BUTTON COLOR LOCK */
+        .btn:hover, .btn:active {
+            background-color: inherit !important;
+            color: inherit !important;
+            border-color: inherit !important;
+        }
+
+        /* TEXT COLOR OVERRIDES */
+        h1, h5, label, th, td, p { color: #ffffff !important; }
+        .text-warning { color: #fbbf24 !important; }
+        .text-info { color: #38bdf8 !important; }
+        .text-danger { color: #f87171 !important; }
+        code { background-color: #000000 !important; color: #fbbf24 !important; padding: 2px 6px; border-radius: 4px; }
+    </style>
+</head>
+<body>
+
+    <div class="container" style="max-width: 100%; width: 100%;">
+        <header class="d-flex justify-between align-center border-bottom-dark mb-20" style="padding-bottom: 20px; display: flex; justify-content: space-between;">
+            <h1 style="font-size: 1.5rem; font-weight: 700;" class="text-warning">ERP Core Infrastructure Command Console</h1>
+            <a href="{% url 'logout' %}" class="btn" style="padding: 6px 16px; border-radius: 20px; font-size: 0.85rem; border: 1px solid #ef4444; color: #ef4444; text-decoration: none;">Kill Global Session</a>
+        </header>
+
+        <div class="admin-layout-grid" style="display: grid; grid-template-columns: 1fr 2fr; gap: 20px;">
+            <div>
+                <div class="card">
+                    <h5 class="text-warning border-bottom-dark mb-20" style="font-size: 1.1rem; font-weight: 600; padding-bottom: 10px;">Provision New HOD Account Node</h5>
+                    <form method="post" autocomplete="off">
+                        {% csrf_token %}
+                        {% include 'erp/form_snippet.html' with form=form %}
+                        <button type="submit" style="background-color: #f59e0b; color: #000; font-weight: bold; margin-top: 15px; padding: 10px; width: 100%; border: none; cursor: pointer; border-radius: 4px;">Commit Structural Provision Node Array</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div>
+                <div class="card mb-20">
+                    <h5 class="text-info mb-20" style="font-size: 1.1rem; font-weight: 600;">Dynamic Registered Head of Department Registry Vector</h5>
+                    <div class="table-responsive">
+                        <table class="modern-table">
+                            <thead>
+                                <tr>
+                                    <th>HOD Name Target</th>
+                                    <th>Department Field</th>
+                                    <th>Mail ID Anchor</th>
+                                    <th>System Managed Username</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for h in page_obj %}
+                                <tr>
+                                    <td><strong>{{ h.name }}</strong></td>
+                                    <td>{{ h.department }}</td>
+                                    <td>{{ h.email }}</td>
+                                    <td><code>{{ h.user.username }}</code></td>
+                                </tr>
+                                {% empty %}
+                                <tr><td colspan="4" style="text-align: center; padding: 20px;">Ecosystem context configuration arrays empty.</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% include 'erp/pagination_snippet.html' with page_obj=page_obj %}
+                </div>
+
+                <div class="card">
+                    <h5 class="text-danger mb-20" style="font-size: 1.1rem; font-weight: 600;">ACID Transaction Modifications Audit Ledger</h5>
+                    <div class="table-responsive">
+                        <table class="modern-table" style="font-size: 0.85rem;">
+                            <thead>
+                                <tr>
+                                    <th>Timestamp</th>
+                                    <th>Operator</th>
+                                    <th>Role</th>
+                                    <th>Target</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for log in history_page %}
+                                <tr>
+                                    <td>{{ log.timestamp|date:"Y-m-d H:i" }}</td>
+                                    <td>{{ log.modified_by }}</td>
+                                    <td>{{ log.role }}</td>
+                                    <td><code>{{ log.target_record }}</code></td>
+                                    <td>{{ log.action }}</td>
+                                </tr>
+                                {% empty %}
+                                <tr><td colspan="5" style="text-align: center; padding: 20px;">No logs available.</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% include 'erp/pagination_snippet.html' with page_obj=history_page %}
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

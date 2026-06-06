@@ -1,0 +1,90 @@
+{% extends 'erp/base_teacher.html' %}
+
+{% block content %}
+<div class="container" style="max-width: 100%; width: 100%; padding: 0;">
+    <div class="card">
+        <div class="d-flex justify-between align-center" style="border-bottom: 1px solid #e2e8f0; padding-bottom: 14px; margin-bottom: 20px;">
+            <h2 style="font-size: 1.25rem; font-weight: 700; margin: 0; color: #0f172a;">Dynamic Allocation Matrix: Student Grading & Attendance Grid</h2>
+        </div>
+
+        <form class="inline-filter-form" method="get">
+            <input type="text" name="search" placeholder="Search tracked matching entities indices strings..." value="{{ search_val }}">
+            
+            <select name="section">
+                <option value="">Filter Assigned Section Token</option>
+                {% for code, label in sections %}
+                    <option value="{{ code }}" {% if selected_sec == code %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+
+            <button type="submit" class="btn btn-primary btn-submit-filter" style="background-color: #0284c7;">Query Scope</button>
+        </form>
+
+        <div class="table-responsive">
+            <table class="modern-table" style="font-size: 0.82rem; text-align: center; font-family: monospace;">
+                <thead style="background-color: #e0f2fe; color: #0369a1;">
+                    <tr>
+                        <th style="text-align: left; padding-left: 16px;">Student Entity Token Name</th>
+                        <th>Reg Code Identifier</th>
+                        <th>Sec Link</th>
+                        <th>Attendance Tracker</th>
+                        <th>Current CGPA</th>
+                        <th>Internal Marks (40)</th>
+                        <th>External Marks (60)</th>
+                        <th>Data Stream Operations Modifier</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for s in page_obj %}
+                    <tr>
+                        <td style="text-align: left; padding-left: 16px;"><strong>{{ s.name_of_student }}</strong></td>
+                        <td><code>{{ s.registration_number }}</code></td>
+                        <td><strong>Section {{ s.section }}</strong></td>
+                        <td>
+                            <span class="{% if s.attendance < 75.0 %}text-danger-status{% else %}text-success-status{% endif %}">
+                                {{ s.attendance }}%
+                            </span>
+                        </td>
+                        <td><span class="badge-secondary-pill">{{ s.cgpa }}</span></td>
+                        <td>{{ s.mid1_marks }}</td>
+                        <td>{{ s.external_marks }}</td>
+                        <td>
+                            <a href="#gradeModal{{ s.pk }}" class="btn" style="padding: 6px 14px; font-size: 0.78rem; background-color: #0284c7; color: #ffffff; border-radius: 6px; font-weight: 600;">Update Scores Track</a>
+                        </td>
+                    </tr>
+
+                    <div class="modal-mask" id="gradeModal{{ s.pk }}">
+                        <div class="modal-window" style="max-width: 500px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #cbd5e1; padding-bottom: 10px; margin-bottom: 15px;">
+                                <h4 style="font-size: 1.05rem; font-weight: bold; color: #1e293b;">Update Academic Vector Scoring Fields: {{ s.name_of_student }}</h4>
+                                <a href="#" style="text-decoration: none; font-size: 1.5rem; color: #64748b;">&times;</a>
+                            </div>
+                            <form method="post" autocomplete="off">
+                                {% csrf_token %}
+                                <input type="hidden" name="pk" value="{{ s.pk }}">
+                                <input type="hidden" name="action" value="update_grading">
+                                
+                                <div style="display: grid; grid-template-columns: 1fr; gap: 10px;">
+                                    {% include 'erp/form_snippet.html' with form=update_form %}
+                                </div>
+                                
+                                <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 25px;">
+                                    <a href="#" class="btn" style="background-color: #cbd5e1; color: #334155; border-radius: 6px;">Close</a>
+                                    <button type="submit" class="btn btn-primary" style="background-color: #0284c7; border-radius: 6px;">Commit Transaction Write Sequence</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <tr>
+                        <td colspan="8" class="text-center" style="color: #64748b; padding: 24px 0;">No mapped allocation student entity instances found matching current parameters criteria vectors.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% include 'erp/pagination_snippet.html' with page_obj=page_obj %}
+    </div>
+</div>
+{% endblock %}

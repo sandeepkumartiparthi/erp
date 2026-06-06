@@ -1,0 +1,15 @@
+{% for field in form %}
+<div class="form-group">
+    <label>{{ field.label }}</label>
+    
+    {{ field }}
+    
+    {% if field.errors %}
+        <div style="color: #dc2626; font-size: 0.72rem; margin-top: 4px; font-weight: 600; text-align: left;">
+            {% for error in field.errors %}
+                <p style="margin: 0;">{{ error }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+{% endfor %}
